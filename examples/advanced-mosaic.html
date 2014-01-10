@@ -8,7 +8,7 @@
 		<script type="text/javascript" src="../bitblueprint-credentials.js"></script>
 		<!-- Let's use the optional jQuery -->
 		<script type="text/javascript" src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
-		<link href="example-styles.css" rel="stylesheet" type="text/css">
+		<link href="advanced-mosaic.css" rel="stylesheet" type="text/css">
 	</head>
 	<body>
 		<div id="search-controls">
@@ -69,15 +69,17 @@
 			console.log("Asset clicked!", asset);
 			$lightbox = $("#asset-lightbox");
 
-			var size = Math.min($lightbox.width(), $lightbox.height());
+			var size = Math.max($lightbox.width(), $lightbox.height());
 			size = Math.round(size);
-			var url = asset.get_thumbnail_url({
-				size: size
-			});
+			var url = asset.get_preview_url() + "?maxsize="+size;
 
 			$lightbox
 				.find("img")
 					.attr('src', url)
+					.hide()
+					.bind('load', function() {
+						$(this).fadeIn("slow");
+					})
 				.end()
 				.fadeIn();
 		}
@@ -136,23 +138,19 @@
 
 		var is_searching = false;
 		function search(catalog, term) {
-			if(window.result) {
-				console.log("Just dropped a search - waiting for last result.");
-			} else {
-				$("#results").empty();
-				$("#search-status").text(LOADING_TEXT);
-				// Once the loading toast is showing, we request tables.
-				catalog.get_tables(function(tables) {
-					var table = tables[0];
-					// Search in the first table (ie. the asset records table).
-					table.search(term, function(result) {
-						window.result = result;
-						window.total_assets = result.total_rows;
-						window.loaded_assets = 0;
-						load_assets_increment();
-					});
+			$("#results").empty();
+			$("#search-status").text(LOADING_TEXT);
+			// Once the loading toast is showing, we request tables.
+			catalog.get_tables(function(tables) {
+				var table = tables[0];
+				// Search in the first table (ie. the asset records table).
+				table.search(term, function(result) {
+					window.result = result;
+					window.total_assets = result.total_rows;
+					window.loaded_assets = 0;
+					load_assets_increment();
 				});
-			}
+			});
 		}
 
 		// When all is loaded.
