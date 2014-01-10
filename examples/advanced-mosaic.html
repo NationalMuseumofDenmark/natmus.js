@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Advanced Mosaic Example</title>
+		<!-- Load Natmus.js -->
+		<script type="text/javascript" src="../dist/cip+natmus.min.js"></script>
+		<!-- Load creadentials -->
+		<script type="text/javascript" src="../bitblueprint-credentials.js"></script>
+		<!-- Let's use the optional jQuery -->
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+		<link href="example-styles.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<div id="search-controls">
+			<select id="search-catalog"></select>
+			<input id="search-term" placeholder="Type a search term and press enter."></input>
+			<div id="search-status"></div>
+		</div>
+		<div id="results"></div>
+		<div id="asset-lightbox">
+			<img>
+
+		</div>
+
+		<script>
+		// Set the CIP username and password or get a session from a server.
+		// var CIP_USERNAME = "";
+		// var CIP_PASSWORD = "";
+		var CIP_USERNAME = BB_USERNAME;
+		var CIP_PASSWORD = BB_PASSWORD;
+		var ASSETS_PR_RESULT = 10;
+		var THUMBNAIL_SIZE = 150;
+		var LOADING_TEXT = "Loading assets ...";
+
+		// Initialize the CIP client.
+		nm = new CIPClient(NatMusConfig);
+		console.log("The natmus client was initialized: ", nm);
+
+		// Open a session CIP session.
+		nm.session_open(CIP_USERNAME, CIP_PASSWORD,
+			function() {
+				console.log("CIP session established!");
+				// First we find the catalogs that we would like to search in.
+				nm.get_catalogs(function(catalogs) {
+					window.catalogs = catalogs;
+					for (c in catalogs) {
+						if(catalogs[c].alias) {
+							$("<option>")
+								.text(catalogs[c].name)
+								.data("catalog", catalogs[c])
+								.appendTo("#search-catalog");
+						}
+					}
+				});
+
+				$("#search-term").bind('keyup', function(e) {
+					if(e.keyCode == 13) { // Enter!
+						var term = $(this).val();
+						var catalog = $("#search-catalog option:selected").data("catalog");
+						search(catalog, term);
+						$("#search-term").select();
+					}
+				});
+			}
+		);
+
+		function asset_clicked() {
+			var asset = $(this).data('asset');
+			console.log("Asset clicked!", asset);
+			$lightbox = $("#asset-lightbox");
+
+			var size = Math.min($lightbox.width(), $lightbox.height());
+			size = Math.round(size);
+			var url = asset.get_thumbnail_url({
+				size: size
+			});
+
+			$lightbox
+				.find("img")
+					.attr('src', url)
+				.end()
+				.fadeIn();
+		}
+
+		function load_assets_increment() {
+			if(!window.result) {
+				return; // Don't do anything.
+			}
+			// Loop through the assets.
+			window.asset_objects = window.result.get(ASSETS_PR_RESULT);
+			for (a in asset_objects) {
+				var asset = asset_objects[a];
+				var url = asset.get_thumbnail_url({
+					size: THUMBNAIL_SIZE
+				});
+				console.log("Appending asset", asset_objects[a], url);
+				$border = $("<div class='asset'>")
+					.hide()
+					.appendTo("#results");
+				$("<img>")
+					.attr('src', url)
+					.data('asset', asset)
+					.click(asset_clicked)
+					.bind('load', function() {
+						$(this).parent().fadeIn("slow");
+						window.loaded_assets++;
+						window.$last_loaded_asset = $(this).parent();
+						$("#search-status").text("Loaded " +window.loaded_assets+ " of " + window.total_assets + " assets");
+					})
+					.appendTo($border);
+			}
+			if(window.asset_objects.length > 0) {
+				if(window.$last_loaded_asset) {
+					// Find out if the last inserted asset is outside of the viewport.
+					var lastAssetTop = window.$last_loaded_asset.offset().top;
+					var scrollBottom = $(window).scrollTop() + $(window).height();
+					console.log(lastAssetTop, scrollBottom, lastAssetTop <= scrollBottom, $("#results .asset").length);
+					if(lastAssetTop <= scrollBottom) {
+						setTimeout(load_assets_increment, 1); // Let the renderer have some time.
+					}
+				} else {
+					setTimeout(load_assets_increment, 1); // Let the renderer have some time.
+				}
+			} else {
+				window.result = null;
+			}
+		}
+
+		function check_endless_scrolling() {
+			var scrollBottom = $(window).scrollTop() + $(window).height();
+			var bottomNotVisible = $("html").height() - scrollBottom;
+			if(window.$last_loaded_asset && bottomNotVisible < window.$last_loaded_asset.height()) {
+				load_assets_increment();
+			}
+		}
+
+		var is_searching = false;
+		function search(catalog, term) {
+			if(window.result) {
+				console.log("Just dropped a search - waiting for last result.");
+			} else {
+				$("#results").empty();
+				$("#search-status").text(LOADING_TEXT);
+				// Once the loading toast is showing, we request tables.
+				catalog.get_tables(function(tables) {
+					var table = tables[0];
+					// Search in the first table (ie. the asset records table).
+					table.search(term, function(result) {
+						window.result = result;
+						window.total_assets = result.total_rows;
+						window.loaded_assets = 0;
+						load_assets_increment();
+					});
+				});
+			}
+		}
+
+		// When all is loaded.
+		$(function() {
+			$("#asset-lightbox").click(function() {
+				$(this).fadeOut();
+			});
+			$(window).resize(check_endless_scrolling).scroll(check_endless_scrolling);
+		});
+
+		</script>
+	</body>
+</html>

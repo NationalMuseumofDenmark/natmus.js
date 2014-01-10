@@ -2,8 +2,59 @@
 <html>
 	<head>
 		<title>Simple Mosaic Example</title>
+		<!-- Load Natmus.js -->
+		<script type="text/javascript" src="../dist/cip+natmus.min.js"></script>
+		<!-- Load creadentials -->
+		<script type="text/javascript" src="../bitblueprint-credentials.js"></script>
+		<!-- Let's use the optional jQuery -->
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+		<link href="example-styles.css" rel="stylesheet" type="text/css">
 	</head>
 	<body>
+		<div id="results"></div>
 
+		<script>
+		// Set the CIP username and password or get a session from a server.
+		// var CIP_USERNAME = "";
+		// var CIP_PASSWORD = "";
+		var CIP_USERNAME = BB_USERNAME;
+		var CIP_PASSWORD = BB_PASSWORD;
+
+		var SEARCH_TERM = "ab";
+		var ASSETS_PR_RESULT = 10;
+
+		// Initialize the CIP client.
+		nm = new CIPClient(NatMusConfig);
+		console.log("The natmus client was initialized: ", nm);
+
+		// Open a session CIP session.
+		nm.session_open(CIP_USERNAME, CIP_PASSWORD,
+			function() {
+				console.log("CIP session established!");
+				// First we find the catalogs that we would like to search in.
+				nm.get_catalogs(function(catalogs) {
+					console.log("Got catalogs", catalogs);
+					catalogs[3].get_tables(function(tables) {
+						console.log("Got tables", tables);
+						tables[0].search(SEARCH_TERM, function(result) {
+							console.log("Got search result", result);
+							do {
+								asset_objects = result.get(ASSETS_PR_RESULT);
+								for (a in asset_objects) {
+									var asset = asset_objects[a];
+									var url = asset.get_thumbnail_url({
+										size: 150
+									});
+									console.log("Appending asset", asset_objects[a], url);
+									$("<img>").attr('src', url).appendTo("#results");
+								}
+							} while(asset_objects.length > 0);
+						});
+					});
+				});
+			}
+		);
+
+		</script>
 	</body>
 </html>
