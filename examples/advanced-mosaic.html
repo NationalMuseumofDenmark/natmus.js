@@ -26,8 +26,12 @@
 		// Set the CIP username and password or get a session from a server.
 		// var CIP_USERNAME = "";
 		// var CIP_PASSWORD = "";
-		var CIP_USERNAME = BB_USERNAME;
-		var CIP_PASSWORD = BB_PASSWORD;
+		if(typeof(CIP_USERNAME) == "undefined") {
+			CIP_USERNAME = prompt("Please provide your CIP username.");
+		}
+		if(typeof(CIP_PASSWORD) == "undefined") {
+			CIP_PASSWORD = prompt("Please provide your CIP password.");
+		}
 		var ASSETS_PR_RESULT = 10;
 		var THUMBNAIL_SIZE = 150;
 		var LOADING_TEXT = "Loading assets ...";
