@@ -35,6 +35,7 @@
 		var ASSETS_PR_RESULT = 10;
 		var THUMBNAIL_SIZE = 150;
 		var LOADING_TEXT = "Loading assets ...";
+		var FOUND_NOTHING_TEXT = "Found nothing ... please change your search term or catalog.";
 
 		// Initialize the CIP client.
 		nm = new CIPClient(NatMusConfig);
@@ -144,17 +145,26 @@
 		function search(catalog, term) {
 			$("#results").empty();
 			$("#search-status").text(LOADING_TEXT);
-			// Once the loading toast is showing, we request tables.
-			catalog.get_tables(function(tables) {
-				var table = tables[0];
-				// Search in the first table (ie. the asset records table).
-				table.search(term, function(result) {
-					window.result = result;
-					window.total_assets = result.total_rows;
-					window.loaded_assets = 0;
-					load_assets_increment();
+			try {
+				// Once the loading toast is showing, we request tables.
+				catalog.get_tables(function(tables) {
+					var table = tables[0];
+					// Search in the first table (ie. the asset records table).
+					table.search(term, function(result) {
+						if(result.total_rows == 0) {
+							$("#search-status").text(FOUND_NOTHING_TEXT);
+						} else {
+							window.result = result;
+							window.total_assets = result.total_rows;
+							window.loaded_assets = 0;
+							load_assets_increment();
+						}
+					});
 				});
-			});
+			} catch(err) {
+				$("#search-status").text("Error: " + err);
+				throw err;
+			}
 		}
 
 		// When all is loaded.
