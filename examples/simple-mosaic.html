@@ -37,7 +37,7 @@
 				// First we find the catalogs that we would like to search in.
 				nm.get_catalogs(function(catalogs) {
 					console.log("Got catalogs", catalogs);
-					catalogs[2].get_tables(function(tables) {
+					catalogs[1].get_tables(function(tables) {
 						console.log("Got tables", tables);
 						tables[0].search(SEARCH_TERM, function(result) {
 							console.log("Got search result", result);
