@@ -2,20 +2,22 @@
 
 The National Museum of Denmark keeps all of its assets and metadata in an asset management system called Cumulus. It is used to keep track of the digitization effort, licensing and many other things pertaining to keeping a digital collection. Cumulus exposes its data for internal and external products, programmers and hobbyists in a [RESTful API called CIP](http://samlinger.natmus.dk/CIP/doc/CIP.html). The SDK described in this document wraps the CIP API for use in a JavaScript project.
 
-## CIP.js and NatMus.js
-CIP.js lets you connect to any CIP endpoint. In order to connect you need to supply a *site configuration*: something that describes how the CIP is set up and is specific to the given CIP endpoint. If that endpoint happens to be the National Museum of Denmark, we've already got you covered with NatMus.js, so you should be good to go.
+## cip.js and natmus.js
+The cip.js library lets you connect to any CIP endpoint. In order to connect you need to supply a *site configuration*: something that describes how the CIP is set up and is specific to the given CIP endpoint. If that endpoint happens to be the National Museum of Denmark, we've already got you covered with NatMus.js, so you should be good to go.
 
-The CIP.js source code is annotated with documentation in the JSDoc format. Look in the `doc/` folder of the ZIP for some pretty-printed versions.
+The CIP.js source code is annotated with documentation in the JSDoc format. Look in the `doc/` folder of the bundled ZIP-file (link below) for some pretty-printed versions.
 
-### Getting the files
+## Getting the files
 If you want to interface with the collections of the National Museum of Denmark you should download the packaged and minified version of the library from the [cip+natmus.js.zip file](http://natmus.demo.bitblueprint.com/natmus.js/cip%2bnatmus.js.zip), extract it and you're ready for loading it into your project.
 
 ### Loading the library
- and make sure natmus.js is loaded in your HTML file, like this:
+To make sure natmus.js is loaded in your HTML file, insert something like this:
 
     <script href="/dist/cip+natmus.min.js"></script>
 
 Where '/dist/cip+natmus.min.js' is the path to the cip+natmus.min.js you just downloaded, have a look at the examples to see how it's done.
+    
+Alternatively load it into your node.js application (if you are using the libary for a server side application).
 
 That's it!
 
