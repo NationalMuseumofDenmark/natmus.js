@@ -8,12 +8,14 @@ CIP.js lets you connect to any CIP endpoint. In order to connect you need to sup
 The CIP.js source code is annotated with documentation in the JSDoc format. Look in the `doc/` folder of the ZIP for some pretty-printed versions.
 
 ### Getting the files
-If you want to interface with the collections of the National Museum of Denmark you should download [natmus.js](https://github.com/NationalMuseumofDenmark/natmus.js) which comes with the NatMus-specific configurations -- batteries included!
+If you want to interface with the collections of the National Museum of Denmark you should download the packaged and minified version of the library from the [cip+natmus.js.zip file](http://natmus.demo.bitblueprint.com/natmus.js/cip%2bnatmus.js.zip), extract it and you're ready for loading it into your project.
 
 ### Loading the library
-Just download the [ZIP file](todo://dead.link), extract it and make sure natmus.js is loaded in your HTML file, like this:
+ and make sure natmus.js is loaded in your HTML file, like this:
 
-    <script href="/path/to/natmus.js"></script>
+    <script href="/dist/cip+natmus.min.js"></script>
+
+Where '/dist/cip+natmus.min.js' is the path to the cip+natmus.min.js you just downloaded, have a look at the examples to see how it's done.
 
 That's it!
 
