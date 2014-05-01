@@ -13,8 +13,14 @@ var NatMusConfig = {
         layout_alias: "web"
     },
     catalog_aliases: {
-        "Danmarks Nyere Tid": "DNT",
-        "Frihedsmuseet": "FHM",
-        "Den Kgl. Mønt- og Medaljesamling": "KMM"
+		"Alle": "ALL",
+		"Antiksamlingen": "AS",
+		"Bevaringsafdelingen": "BA",
+		"Danmarks Middelalder og Renæssance": "DMR",
+		"Danmarks Nyere Tid": "DNT",
+		"Etnografisk samling": "ES",
+		"Frihedsmuseet": "FHM",
+		"Den Kgl. Mønt- og Medaljesamling": "KMM",
+		"Musikmuseet": "MUM",
     }
 };
