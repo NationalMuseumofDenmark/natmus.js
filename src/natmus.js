@@ -21,6 +21,6 @@ var NatMusConfig = {
 		"Etnografisk samling": "ES",
 		"Frihedsmuseet": "FHM",
 		"Den Kgl. Mønt- og Medaljesamling": "KMM",
-		"Musikmuseet": "MUM",
+		"Musikmuseet": "MUM"
     }
 };

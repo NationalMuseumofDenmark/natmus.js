@@ -11,11 +11,13 @@
 		<link href="advanced-mosaic.css" rel="stylesheet" type="text/css">
 	</head>
 	<body>
-		<div id="search-controls">
-			<select id="search-catalog"></select>
-			<input id="search-term" placeholder="Type a search term and press enter."></input>
+		<header>
+			<div id="search-controls">
+				<select id="search-catalog"></select>
+				<input id="search-term" placeholder="Type a search term and press enter."></input>
+			</div>
 			<div id="search-status"></div>
-		</div>
+		</header>
 		<div id="results"></div>
 		<div id="asset-lightbox">
 			<img>
@@ -34,16 +36,21 @@
 		}
 		var ASSETS_PR_RESULT = 10;
 		var THUMBNAIL_SIZE = 150;
-		var LOADING_TEXT = "Loading assets ...";
-		var FOUND_NOTHING_TEXT = "Found nothing ... please change your search term or catalog.";
+		var LOADING_SESSION_TEXT = "Establishing session.";
+		var LOADING_CATEGORIES_TEXT = "Loading categories.";
+		var LOADING_ASSETS_TEXT = "Loading assets.";
+		var FOUND_NOTHING_TEXT = "Found nothing! Please change your search term or catalog.";
 
 		// Initialize the CIP client.
 		nm = new CIPClient(NatMusConfig);
 		console.log("The natmus client was initialized: ", nm);
+		$("#search-controls").hide();
+		$("#search-status").text(LOADING_SESSION_TEXT);
 
 		// Open a session CIP session.
 		nm.session_open(CIP_USERNAME, CIP_PASSWORD,
 			function() {
+				$("#search-status").text(LOADING_CATEGORIES_TEXT);
 				console.log("CIP session established!");
 				// First we find the catalogs that we would like to search in.
 				nm.get_catalogs(function(catalogs) {
@@ -54,8 +61,10 @@
 								.text(catalogs[c].name)
 								.data("catalog", catalogs[c])
 								.appendTo("#search-catalog");
+							$("#search-controls").fadeIn();
 						}
 					}
+					$("#search-status").text("");
 				});
 
 				$("#search-term").bind('keyup', function(e) {
@@ -144,7 +153,7 @@
 		var is_searching = false;
 		function search(catalog, term) {
 			$("#results").empty();
-			$("#search-status").text(LOADING_TEXT);
+			$("#search-status").hide().text(LOADING_ASSETS_TEXT).fadeIn();
 			try {
 				// Once the loading toast is showing, we request tables.
 				catalog.get_tables(function(tables) {
@@ -152,7 +161,7 @@
 					// Search in the first table (ie. the asset records table).
 					table.search(term, function(result) {
 						if(result.total_rows == 0) {
-							$("#search-status").text(FOUND_NOTHING_TEXT);
+							$("#search-status").hide().text(FOUND_NOTHING_TEXT).fadeIn();
 						} else {
 							window.result = result;
 							window.total_assets = result.total_rows;
@@ -162,7 +171,7 @@
 					});
 				});
 			} catch(err) {
-				$("#search-status").text("Error: " + err);
+				$("#search-status").hide().text("Error: " + err).fadeIn();
 				throw err;
 			}
 		}
