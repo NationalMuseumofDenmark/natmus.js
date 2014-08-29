@@ -7,20 +7,20 @@
  * The Nationalmuseet config for CIP.js
  */
 var NatMusConfig = {
-    endpoint: "http://samlinger.natmus.dk/CIP/",
-    constants: {
-        catch_all_alias: "any",
-        layout_alias: "web"
-    },
-    catalog_aliases: {
-		"Alle": "ALL",
-		"Antiksamlingen": "AS",
-		"Bevaringsafdelingen": "BA",
-		"Danmarks Middelalder og Renæssance": "DMR",
-		"Danmarks Nyere Tid": "DNT",
-		"Etnografisk samling": "ES",
-		"Frihedsmuseet": "FHM",
-		"Den Kgl. Mønt- og Medaljesamling": "KMM",
-		"Musikmuseet": "MUM"
-    }
+		endpoint: "http://cumulus.natmus.dk/CIP/",
+		constants: {
+				catch_all_alias: "any",
+				layout_alias: "web"
+		},
+		catalog_aliases: {
+			"Alle": "ALL",
+			"Antiksamlingen": "AS",
+			"Bevaringsafdelingen": "BA",
+			"Danmarks Middelalder og Renæssance": "DMR",
+			"Danmarks Nyere Tid": "DNT",
+			"Etnografisk samling": "ES",
+			"Frihedsmuseet": "FHM",
+			"Den Kgl. Mønt- og Medaljesamling": "KMM",
+			"Musikmuseet": "MUM"
+		}
 };

@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Simple Mosaic Example</title>
+		<!-- Load Natmus.js -->
+		<script type="text/javascript" src="../dist/cip+natmus.min.js"></script>
+		<!-- Load creadentials -->
+		<script type="text/javascript" src="../bitblueprint-credentials.js"></script>
+		<!-- Let's use the optional jQuery -->
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+	</head>
+	<body>
+		<div id="results"></div>
+
+		<script>
+		// Set the CIP username and password or get a session from a server.
+		if(typeof(CIP_USERNAME) == "undefined") {
+			CIP_USERNAME = prompt("Please provide your CIP username.");
+		}
+		if(typeof(CIP_PASSWORD) == "undefined") {
+			CIP_PASSWORD = prompt("Please provide your CIP password.");
+		}
+
+		var CATALOG_ALIAS = "BA";
+		var ASSET_ID = "39711";
+
+		// Initialize the CIP client.
+		nm = new CIPClient(NatMusConfig);
+		console.log("The natmus client was initialized: ", nm);
+
+		// Open a session CIP session.
+		nm.session_open(CIP_USERNAME, CIP_PASSWORD, function() {
+			console.log("CIP session established!");
+			// First we find the catalogs that we would like to search in.
+			nm.get_asset(CATALOG_ALIAS, ASSET_ID, true, function(asset) {
+				console.log(asset);
+			});
+		});
+
+		</script>
+	</body>
+</html>
