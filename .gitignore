@@ -2,3 +2,5 @@ bitblueprint-credentials.js
 *~
 doc/
 dist/
+node_modules/
+
