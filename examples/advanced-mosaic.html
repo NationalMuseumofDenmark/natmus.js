@@ -34,15 +34,15 @@
 		if(typeof(CIP_PASSWORD) == "undefined") {
 			CIP_PASSWORD = prompt("Please provide your CIP password.");
 		}
-		var ASSETS_PR_RESULT = 10;
-		var THUMBNAIL_SIZE = 150;
+		var ASSETS_PR_RESULT = 2; //10;
+		var THUMBNAIL_SIZE = 145;
 		var LOADING_SESSION_TEXT = "Establishing session.";
 		var LOADING_CATEGORIES_TEXT = "Loading categories.";
 		var LOADING_ASSETS_TEXT = "Loading assets.";
 		var FOUND_NOTHING_TEXT = "Found nothing! Please change your search term or catalog.";
 
 		// Initialize the CIP client.
-		nm = new CIPClient(NatMusConfig);
+		nm = new natmus.CIPClient(NatMusConfig);
 		console.log("The natmus client was initialized: ", nm);
 		$("#search-controls").hide();
 		$("#search-status").text(LOADING_SESSION_TEXT);
@@ -54,6 +54,7 @@
 				console.log("CIP session established!");
 				// First we find the catalogs that we would like to search in.
 				nm.get_catalogs(function(catalogs) {
+					console.log("Catalogs:", catalogs);
 					window.catalogs = catalogs;
 					for (c in catalogs) {
 						if(catalogs[c].alias) {
@@ -98,56 +99,62 @@
 				.fadeIn();
 		}
 
-		function load_assets_increment() {
+		function append_assets_from_result() {
+			// We make sure that there is a result loaded.
 			if(!window.result) {
-				return; // Don't do anything.
+				return; // Otherwise - don't do anything.
 			}
-			// Loop through the assets.
-			window.asset_objects = window.result.get(ASSETS_PR_RESULT);
-			for (a in asset_objects) {
-				var asset = asset_objects[a];
-				var url = asset.get_thumbnail_url({
-					size: THUMBNAIL_SIZE
-				});
-				console.log("Appending asset", asset_objects[a], url);
-				$border = $("<div class='asset'>")
-					.hide()
-					.appendTo("#results");
-				$("<img>")
-					.attr('src', url)
-					.data('asset', asset)
-					.click(asset_clicked)
-					.bind('load', function() {
-						$(this).parent().fadeIn("slow");
-						window.loaded_assets++;
-						window.$last_loaded_asset = $(this).parent();
-						$("#search-status").text("Loaded " +window.loaded_assets+ " of " + window.total_assets + " assets");
-					})
-					.appendTo($border);
-			}
-			if(window.asset_objects.length > 0) {
-				if(window.$last_loaded_asset) {
-					// Find out if the last inserted asset is outside of the viewport.
-					var lastAssetTop = window.$last_loaded_asset.offset().top;
-					var scrollBottom = $(window).scrollTop() + $(window).height();
-					console.log(lastAssetTop, scrollBottom, lastAssetTop <= scrollBottom, $("#results .asset").length);
-					if(lastAssetTop <= scrollBottom) {
-						setTimeout(load_assets_increment, 1); // Let the renderer have some time.
-					}
-				} else {
-					setTimeout(load_assets_increment, 1); // Let the renderer have some time.
-				}
+			// The assets fetched from Cumulus but not loaded as images.
+			var $fetched_assets = $("#results .asset");
+			// The assets fetched from Cumulus and loaded as images.
+			var $lowest_loaded_asset = $("#results .asset:visible:last");
+			// Should we load more assets?
+			var load_more_assets = false;
+
+			if($fetched_assets.length === 0 || $lowest_loaded_asset.length === 0) {
+				// Yes - if no assets has been fetched nor loaded so far.
+				load_more_assets = true;
 			} else {
-				window.result = null;
+				// Yes - if the window is scrolled below the lowest visible asset.
+				var scrollBottom = $(window).scrollTop() + $(window).height();
+				var bottomNotVisible = $("html").height() - scrollBottom;
+				if($lowest_loaded_asset.length === 1 && bottomNotVisible < $lowest_loaded_asset.height()) {
+					load_more_assets = true;
+				}
+			}
+			if($fetched_assets.length >= window.result.total_rows) {
+				load_more_assets = false; // We got it all ...
+			}
+			if(load_more_assets) {
+				window.result.get(ASSETS_PR_RESULT, $fetched_assets.length, function(assets) {
+					for (a in assets) {
+						var asset = assets[a];
+						var url = asset.get_thumbnail_url({
+							size: THUMBNAIL_SIZE
+						});
+						console.log("Appending asset", asset, url);
+						$border = $("<div class='asset'>")
+							.hide()
+							.appendTo("#results");
+						$("<img>")
+							.attr('src', url)
+							.data('asset', asset)
+							.click(asset_clicked)
+							.bind('load', function() {
+								$(this).parent().fadeIn("slow");
+								$loaded_assets = $("#results .asset:visible");
+								$("#search-status").text("Loaded " +$loaded_assets.length+ " of " + window.result.total_rows + " assets");
+							})
+							.appendTo($border);
+					}
+					// Check if more assets are needed and give some time for rendering.
+					setTimeout(append_assets_from_result, 100);
+				});
 			}
 		}
 
 		function check_endless_scrolling() {
-			var scrollBottom = $(window).scrollTop() + $(window).height();
-			var bottomNotVisible = $("html").height() - scrollBottom;
-			if(window.$last_loaded_asset && bottomNotVisible < window.$last_loaded_asset.height()) {
-				load_assets_increment();
-			}
+			append_assets_from_result();
 		}
 
 		var is_searching = false;
@@ -157,16 +164,18 @@
 			try {
 				// Once the loading toast is showing, we request tables.
 				catalog.get_tables(function(tables) {
+					console.log("Tables of catalog", catalog, "is", tables);
 					var table = tables[0];
 					// Search in the first table (ie. the asset records table).
 					table.search(term, function(result) {
+						console.log("Table search results are in", result);
 						if(result.total_rows == 0) {
 							$("#search-status").hide().text(FOUND_NOTHING_TEXT).fadeIn();
 						} else {
 							window.result = result;
-							window.total_assets = result.total_rows;
-							window.loaded_assets = 0;
-							load_assets_increment();
+							// window.total_assets = result.total_rows;
+							// window.loaded_assets = 0;
+							append_assets_from_result();
 						}
 					});
 				});
