@@ -1,5 +1,5 @@
 {
-  "name": "natmus.js",
+  "name": "natmus-js",
   "version": "0.0.0",
   "main": "src/natmus.js",
   "dependencies": {
