@@ -4,7 +4,7 @@
  */
 
 if(typeof(require) != "undefined") {
-	cip = require('./../lib/cip.js/src/cip.js');
+	cip = require('cip-js');
 }
 
 /**
