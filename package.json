@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "main": "src/natmus.js",
   "dependencies": {
+  	"cip-js": "git+https://github.com/NationalMuseumofDenmark/cip.js.git#get-asset-feature",
     "request": "^2.27.0"
   }
 }
