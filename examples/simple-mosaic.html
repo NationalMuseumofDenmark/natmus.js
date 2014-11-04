@@ -41,21 +41,26 @@
 						console.log("Got tables", tables);
 						tables[0].search(SEARCH_TERM, function(result) {
 							console.log("Got search result", result);
-							do {
-								result.get(ASSETS_PR_RESULT, 0, function(asset_objects) {
-									for (a in asset_objects) {
-										var asset = asset_objects[a];
-										var url = asset.get_thumbnail_url({
-											size: 150
-										});
-										console.log("Appending asset", asset_objects[a], url);
-										$("<img>").attr('src', url).appendTo("#results");
-									}
-								});
-							} while(asset_objects.length > 0);
+							// Get the first couple of assets.
+							result.get(ASSETS_PR_RESULT, 0, function(asset_objects) {
+								for (a in asset_objects) {
+									var asset = asset_objects[a];
+									var url = asset.get_thumbnail_url({
+										size: 150
+									});
+									console.log("Appending asset", asset_objects[a], url);
+									$("<img>").attr('src', url).appendTo("#results");
+								}
+							});
+						}, function(err) {
+							console.error("Error when searching in a table: ", err);
 						});
+					}, function(err) {
+						console.error("Error getting table: ", err);
 					});
 				});
+			}, function(err) {
+				console.error("Error opening a session: ", err);
 			}
 		);
 
