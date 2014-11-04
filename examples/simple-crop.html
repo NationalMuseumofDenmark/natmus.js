@@ -31,10 +31,16 @@
 		// Open a session CIP session.
 		nm.session_open(CIP_USERNAME, CIP_PASSWORD, function() {
 			console.log("CIP session established!");
-			// First we find the catalogs that we would like to search in.
-			nm.get_asset(CATALOG_ALIAS, ASSET_ID, true, function(asset) {
-				console.log(asset);
-			});
+			try {
+				// First we find the catalogs that we would like to search in.
+				nm.get_asset(CATALOG_ALIAS, ASSET_ID, true, function(asset) {
+					console.log(asset);
+				});
+			} catch(err) {
+				console.error("Got an error when getting asset: ", err, err.stack);
+			}
+		}, function(err) {
+			console.error("Got an error when opening the session: ", this, err);
 		});
 
 		</script>
