@@ -1,16 +1,9 @@
 <html>
   <head>
-    <script src="vendor/qwest.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.1.6/zepto.min.js"></script>
     <script src="test-credentials.js"></script>
-    <script src="src/cip-common.js"></script>
-    <script src="src/cip-catalog.js"></script>
-    <script src="src/cip-table.js"></script>
-    <script src="src/cip-asset.js"></script>
-    <script src="src/cip-searchresult.js"></script>
-    <script src="src/cip-layout.js"></script>
-    <script src="src/cip.js"></script>
+    <script src="lib/cip.js/dist/cip.js"></script>
     <script src="src/natmus.js" charset="utf-8"></script>
-    <script src="vendor/zepto.min.js"></script>
   </head>
 
   <body>
@@ -19,21 +12,23 @@
     <script>
     nm = new CIPClient(NatMusConfig);
 
-    nm.session_open(CIP_USERNAME, CIP_PASSWORD, function() {
-      $("#test1").click(function() {
-        nm.get_catalogs(function(catalogs) {
-          catalogs[3].get_tables(function(tables) {
-            tables[0].search("b", function(results) {
-              console.log(['yay', results])
-
-              blah = results.get(100);
-              console.log(blah);
+    nm.sessionOpen(CIP_USERNAME, CIP_PASSWORD).then(function(response) {
+      console.log('Session opened', response);
+      $('#test1').click(function() {
+        console.log('Starting test #1');
+        nm.getCatalogs().then(function(catalogs) {
+          console.log('Catalogs', catalogs);
+          return catalogs[1].getTables().then(function(tables) {
+            return tables[0].search("b").then(function(results) {
+              return results.get(100);
             });
           });
+        }).then(function(assets) {
+          console.log(assets);
         });
       });
 
-      $("#test2").click(function() {
+      $('#test2').click(function() {
       });
 
     });

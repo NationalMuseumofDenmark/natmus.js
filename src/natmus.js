@@ -7,12 +7,12 @@
  * The Nationalmuseet config for CIP.js
  */
 var NatMusConfig = {
-    endpoint: "http://samlinger.natmus.dk/CIP/",
-    constants: {
-        catch_all_alias: "any",
-        layout_alias: "web"
-    },
-    catalog_aliases: {
+	endpoint: "http://cumulus.natmus.dk/CIP/",
+	constants: {
+			catch_all_alias: "any",
+			layout_alias: "web"
+	},
+	catalog_aliases: {
 		"Alle": "ALL",
 		"Antiksamlingen": "AS",
 		"Bevaringsafdelingen": "BA",
@@ -22,5 +22,5 @@ var NatMusConfig = {
 		"Frihedsmuseet": "FHM",
 		"Den Kgl. Mønt- og Medaljesamling": "KMM",
 		"Musikmuseet": "MUM"
-    }
+	}
 };
