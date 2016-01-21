@@ -2,15 +2,14 @@
   <head>
     <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.1.6/zepto.min.js"></script>
     <script src="test-credentials.js"></script>
-    <script src="lib/cip.js/dist/cip.js"></script>
-    <script src="src/natmus.js" charset="utf-8"></script>
+    <script src="dist/natmus.js" charset="utf-8"></script>
   </head>
 
   <body>
     <button id="test1">Test 1</button>
     <button id="test2">Test 2</button>
     <script>
-    nm = new CIPClient(NatMusConfig);
+    nm = new NatmusClient();
 
     nm.sessionOpen(CIP_USERNAME, CIP_PASSWORD).then(function(response) {
       console.log('Session opened', response);

@@ -1,0 +1,32 @@
+{
+  "name": "natmus-js",
+  "version": "0.0.1",
+  "description": "Object-relational wrapper around the National Museum of Denmark's Cumulus CIP systems",
+  "main": "src/natmus.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "build": "browserify src/natmus.js -o dist/natmus.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NationalMuseumofDenmark/natmus.js.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NationalMuseumofDenmark/natmus.js/issues"
+  },
+  "homepage": "https://github.com/NationalMuseumofDenmark/natmus.js#readme",
+  "dependencies": {
+    "cip-js": "git://github.com/NationalMuseumofDenmark/cip.js#feature/promises"
+  },
+  "devDependencies": {
+    "browser-request": "^0.3.3",
+    "browserify": "^13.0.0"
+  },
+  "browser": {
+    "request": "browser-request"
+  }
+}
