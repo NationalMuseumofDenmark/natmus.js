@@ -23,7 +23,10 @@ var NatmusConfig = {
     "Etnografisk samling": "ES",
     "Frihedsmuseet": "FHM",
     "Den Kgl. Mønt- og Medaljesamling": "KMM",
-    "Musikmuseet": "MUM"
+    "Musikmuseet": "MUM",
+    "Etnografisk Samling": "ES",
+    "Danmarks Oldtid": "DO",
+    "Frilandsmuseet": "FLM"
   }
 };
 
