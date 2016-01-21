@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/NationalMuseumofDenmark/natmus.js#readme",
   "dependencies": {
-    "cip-js": "git+https://github.com/NationalMuseumofDenmark/natmus.js.git#feature/promises"
+    "cip-js": "git+https://github.com/NationalMuseumofDenmark/cip.js.git#feature/promises"
   },
   "devDependencies": {
     "browser-request": "^0.3.3",
