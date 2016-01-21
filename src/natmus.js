@@ -9,10 +9,10 @@
 var NatMusConfig = {
 	endpoint: "http://cumulus.natmus.dk/CIP/",
 	constants: {
-			catch_all_alias: "any",
-			layout_alias: "web"
+			catchAllAlias: "any",
+			layoutAlias: "web"
 	},
-	catalog_aliases: {
+	catalogAliases: {
 		"Alle": "ALL",
 		"Antiksamlingen": "AS",
 		"Bevaringsafdelingen": "BA",
