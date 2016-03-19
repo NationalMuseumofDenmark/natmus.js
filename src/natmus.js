@@ -16,7 +16,7 @@ var NatmusConfig = {
   },
   catalogAliases: {
     "Alle": "ALL",
-    "Antiksamlingen": "AS",
+    "Antikken": "AS",
     "Bevaringsafdelingen": "BA",
     "Danmarks Middelalder og Renæssance": "DMR",
     "Danmarks Nyere Tid": "DNT",
