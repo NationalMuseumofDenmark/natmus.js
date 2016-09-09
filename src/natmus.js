@@ -22,5 +22,7 @@ var NatMusConfig = {
 		"Frihedsmuseet": "FHM",
 		"Den Kgl. Mønt- og Medaljesamling": "KMM",
 		"Musikmuseet": "MUM"
-    }
+    },
+    apiversion: 4,
+    serveraddress: 'ppcumulus.natmus.int'
 };
