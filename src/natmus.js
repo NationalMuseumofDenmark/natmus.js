@@ -27,7 +27,9 @@ var NatmusConfig = {
     "Etnografisk Samling": "ES",
     "Danmarks Oldtid": "DO",
     "Frilandsmuseet": "FLM"
-  }
+  },
+  apiversion: 4,
+  serveraddress: 'ppcumulus.natmus.int'
 };
 
 function NatmusClient() {
