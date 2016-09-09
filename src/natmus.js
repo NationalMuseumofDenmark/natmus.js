@@ -28,8 +28,8 @@ var NatmusConfig = {
     "Danmarks Oldtid": "DO",
     "Frilandsmuseet": "FLM"
   },
-  apiversion: 4,
-  serveraddress: 'ppcumulus.natmus.int'
+  apiVersion: 4,
+  serverAddress: 'ppcumulus.natmus.int'
 };
 
 function NatmusClient() {
